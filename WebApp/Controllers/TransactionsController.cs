@@ -2,9 +2,11 @@
 using UseCases.TransactionsUseCases;
 using WebApp.ViewModels;
 using CoreBusiness;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+	[Authorize]
 	public class TransactionsController : Controller
 	{
 		private readonly ISearchTransactionsUseCase searchTransactionsUseCase;

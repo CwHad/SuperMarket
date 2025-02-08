@@ -3,15 +3,18 @@ using UseCases.CategoriesUseCases;
 using UseCases.ProductsUseCases;
 using WebApp.ViewModels;
 using CoreBusiness;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+	[Authorize(Policy = "Cashiers")]
 	public class SalesController : Controller
 	{
 		private readonly IViewCategoriesUseCase viewCategoriesUseCase;
 		private readonly IViewSelectedProductUseCase viewSelectedProductUseCase;
 		private readonly IViewProductsInCategoryUseCase viewProductsInCategoryUseCase;
 		private readonly ISellProductUseCase sellProductUseCase;
+
 
 		public SalesController(
 			IViewCategoriesUseCase viewCategoriesUseCase,
@@ -63,6 +66,12 @@ namespace WebApp.Controllers
 			salesViewModel.SelectedCategoryId = product?.CategoryId ?? 0;
 			salesViewModel.Categories = viewCategoriesUseCase.Execute();
 			return View("Index", salesViewModel);
+		}
+
+		public IActionResult ProductsByCategoryPartial(int categoryId)
+		{
+			var products = viewProductsInCategoryUseCase.Execute(categoryId);
+			return PartialView("_Products", products);
 		}
 
 	}
